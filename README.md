@@ -185,7 +185,336 @@ const newStatus = await client.organizationStatuses.create(data);
 const updated = await client.organizationStatuses.update(id, data);
 ```
 
-*Additional resources (configurations, contacts, documents, passwords, flexible assets, etc.) follow the same patterns and will be documented as they are implemented.*
+### Configurations
+
+```typescript
+// List all configurations
+const { data } = await client.configurations.list();
+
+// List configurations for an organization
+const { data } = await client.configurations.listByOrg(orgId);
+
+// Get with related data
+const config = await client.configurations.get(id, {
+  include: 'configuration_interfaces,related_items',
+});
+
+// Create
+const newConfig = await client.configurations.create({
+  organizationId: 123,
+  configurationTypeId: 1,
+  name: 'Server-01',
+});
+```
+
+### Configuration Types, Statuses, Interfaces
+
+```typescript
+// Configuration Types
+const { data } = await client.configurationTypes.list();
+const type = await client.configurationTypes.create({ name: 'Server' });
+
+// Configuration Statuses
+const { data } = await client.configurationStatuses.list();
+const status = await client.configurationStatuses.create({ name: 'Active' });
+
+// Configuration Interfaces (nested under configurations)
+const { data } = await client.configurationInterfaces.listByConfig(configId);
+const iface = await client.configurationInterfaces.create({
+  configurationId: 123,
+  name: 'eth0',
+  ipAddress: '192.168.1.1',
+});
+```
+
+### Contacts
+
+```typescript
+// List contacts
+const { data } = await client.contacts.list();
+
+// List contacts for an organization
+const { data } = await client.contacts.listByOrg(orgId);
+
+// Create a contact
+const contact = await client.contacts.create({
+  organizationId: 123,
+  firstName: 'John',
+  lastName: 'Doe',
+  contactTypeId: 1,
+});
+```
+
+### Contact Types
+
+```typescript
+const { data } = await client.contactTypes.list();
+const type = await client.contactTypes.create({ name: 'Technical' });
+```
+
+### Documents
+
+```typescript
+// List documents
+const { data } = await client.documents.list();
+
+// List documents for an organization
+const { data } = await client.documents.listByOrg(orgId);
+
+// Create a document
+const doc = await client.documents.create({
+  organizationId: 123,
+  name: 'Network Diagram',
+});
+
+// Publish a document
+await client.documents.publish(docId);
+```
+
+### Document Sections and Images
+
+```typescript
+// Document Sections
+const { data } = await client.documentSections.listByDoc(docId);
+const section = await client.documentSections.create(docId, {
+  name: 'Overview',
+  content: '<p>Introduction...</p>',
+});
+
+// Document Images
+const { data } = await client.documentImages.list();
+const image = await client.documentImages.create({
+  documentId: 123,
+  content: base64ImageData,
+});
+```
+
+### Passwords
+
+```typescript
+// List passwords (values hidden by default)
+const { data } = await client.passwords.list();
+
+// List passwords with values visible
+const { data } = await client.passwords.list({ showPassword: true });
+
+// Get a password with value
+const pwd = await client.passwords.get(id, { showPassword: true });
+
+// Create a password
+const newPwd = await client.passwords.create({
+  organizationId: 123,
+  name: 'Admin Password',
+  password: 'secret123',
+  passwordCategoryId: 1,
+});
+```
+
+### Password Categories and Folders
+
+```typescript
+// Password Categories
+const { data } = await client.passwordCategories.list();
+const cat = await client.passwordCategories.create({ name: 'Server Credentials' });
+
+// Password Folders (nested under organizations)
+const { data } = await client.passwordFolders.listByOrg(orgId);
+const folder = await client.passwordFolders.create(orgId, { name: 'Production' });
+```
+
+### Flexible Assets
+
+```typescript
+// List flexible asset types
+const { data: types } = await client.flexibleAssetTypes.list();
+
+// List flexible assets (requires filter)
+const { data } = await client.flexibleAssets.list({
+  filter: { flexibleAssetTypeId: 123 },
+});
+
+// Create a flexible asset
+const asset = await client.flexibleAssets.create({
+  organizationId: 123,
+  flexibleAssetTypeId: 456,
+  traits: {
+    'custom-field-1': 'value1',
+    'custom-field-2': 'value2',
+  },
+});
+```
+
+### Flexible Asset Types and Fields
+
+```typescript
+// Flexible Asset Types
+const { data } = await client.flexibleAssetTypes.list();
+const type = await client.flexibleAssetTypes.create({
+  name: 'Network Documentation',
+  icon: 'sitemap',
+});
+
+// Flexible Asset Fields (nested under types)
+const { data } = await client.flexibleAssetFields.listByType(typeId);
+const field = await client.flexibleAssetFields.create({
+  flexibleAssetTypeId: 123,
+  name: 'IP Range',
+  kind: 'Text',
+});
+```
+
+### Locations
+
+```typescript
+// List locations for an organization
+const { data } = await client.locations.listByOrg(orgId);
+
+// Create a location
+const loc = await client.locations.create({
+  organizationId: 123,
+  name: 'Main Office',
+  addressLine1: '123 Main St',
+  city: 'Springfield',
+  postalCode: '12345',
+  countryId: 1,
+  regionId: 1,
+});
+```
+
+### Users and Groups
+
+```typescript
+// Users (read-only creation, can update)
+const { data } = await client.users.list();
+const user = await client.users.get(userId);
+const updated = await client.users.update(userId, { firstName: 'Jane' });
+
+// Bulk update users
+const results = await client.users.bulkUpdate({
+  users: [
+    { id: 1, firstName: 'Jane' },
+    { id: 2, lastName: 'Smith' },
+  ],
+});
+
+// User Metrics
+const { data } = await client.userMetrics.list({
+  filter: { userId: 123, date: '2024-01-01' },
+});
+
+// Groups
+const { data } = await client.groups.list();
+const group = await client.groups.create({ name: 'Admins' });
+```
+
+### Metadata Resources
+
+```typescript
+// Manufacturers
+const { data } = await client.manufacturers.list();
+const mfg = await client.manufacturers.create({ name: 'Dell' });
+
+// Models (nested under manufacturers)
+const { data } = await client.models.listByManufacturer(mfgId);
+const model = await client.models.create({ manufacturerId: 1, name: 'PowerEdge R640' });
+
+// Platforms (read-only)
+const { data } = await client.platforms.list();
+
+// Operating Systems (read-only)
+const { data } = await client.operatingSystems.list();
+
+// Countries (read-only)
+const { data } = await client.countries.list();
+const country = await client.countries.get(countryId);
+
+// Regions (nested under countries, read-only)
+const { data } = await client.regions.listByCountry(countryId);
+```
+
+### Miscellaneous Resources
+
+```typescript
+// Domains (nested under organizations, read-only)
+const { data } = await client.domains.listByOrg(orgId);
+
+// Expirations (read-only)
+const { data } = await client.expirations.list();
+const exp = await client.expirations.get(expId);
+
+// Logs (read-only)
+const { data } = await client.logs.list();
+for await (const log of client.logs.listAll()) {
+  console.log(log.action);
+}
+
+// Attachments (nested under various resources)
+const { data } = await client.attachments.list('configurations', configId);
+const att = await client.attachments.create('configurations', configId, {
+  name: 'diagram.png',
+  content: base64Data,
+});
+await client.attachments.delete('configurations', configId, attachmentId);
+
+// Related Items
+await client.relatedItems.create('configurations', configId, {
+  destinationType: 'passwords',
+  destinationId: passwordId,
+});
+await client.relatedItems.delete('configurations', configId, relatedItemId);
+
+// Exports
+const exportJob = await client.exports.create({
+  organizationIds: [123, 456],
+  includePasswords: true,
+});
+const status = await client.exports.get(exportJob.id);
+
+// Checklists (nested under organizations)
+const { data } = await client.checklists.listByOrg(orgId);
+const checklist = await client.checklists.get(checklistId);
+const updated = await client.checklists.update(checklistId, { completed: true });
+```
+
+## Complete Resource Reference
+
+| Resource | Methods |
+|----------|---------|
+| `organizations` | list, listAll, get, create, update, delete |
+| `organizationTypes` | list, listAll, get, create, update |
+| `organizationStatuses` | list, listAll, get, create, update |
+| `configurations` | list, listAll, listByOrg, listAllByOrg, get, create, update, delete |
+| `configurationTypes` | list, listAll, get, create, update, delete |
+| `configurationStatuses` | list, listAll, get, create, update, delete |
+| `configurationInterfaces` | listByConfig, create, update, delete |
+| `contacts` | list, listAll, listByOrg, listAllByOrg, get, create, update, delete |
+| `contactTypes` | list, listAll, get, create, update |
+| `documents` | list, listAll, listByOrg, listAllByOrg, get, create, update, delete, publish |
+| `documentSections` | listByDoc, create, update, delete |
+| `documentImages` | list, create, delete |
+| `passwords` | list, listAll, listByOrg, listAllByOrg, get, create, update, delete |
+| `passwordCategories` | list, listAll, get, create, update, delete |
+| `passwordFolders` | listByOrg, create, update, delete |
+| `flexibleAssetTypes` | list, listAll, get, create, update, delete |
+| `flexibleAssetFields` | listByType, create, update, delete |
+| `flexibleAssets` | list, listAll, get, create, update, delete |
+| `locations` | listByOrg, create, update, delete |
+| `users` | list, listAll, get, update, bulkUpdate |
+| `userMetrics` | list, listAll |
+| `groups` | list, listAll, get, create, update, delete |
+| `manufacturers` | list, listAll, get, create, update |
+| `models` | listByManufacturer, create, update |
+| `platforms` | list |
+| `operatingSystems` | list |
+| `countries` | list, listAll, get |
+| `regions` | listByCountry |
+| `domains` | listByOrg |
+| `expirations` | list, listAll, get |
+| `logs` | list, listAll |
+| `attachments` | list, create, update, delete |
+| `relatedItems` | create, update, delete |
+| `exports` | list, listAll, get, create, delete |
+| `checklists` | listByOrg, get, update, delete |
 
 ## Rate Limiting
 

@@ -11,13 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial release of node-it-glue library
+- Initial release of node-it-glue library with full API coverage
 - Core infrastructure:
-  - `ITGlueClient` main client class
-  - HTTP client with fetch wrapper
-  - JSON:API serialization/deserialization
-  - Rate limiting (3000 req / 5 min)
-  - Automatic pagination with async iterators
+  - `ITGlueClient` main client class with 27 resource properties
+  - HTTP client with fetch wrapper and automatic retries
+  - JSON:API serialization/deserialization with kebab-to-camel case conversion
+  - Rate limiting (3000 req / 5 min) with throttling and exponential backoff
+  - Automatic pagination with async iterators and helper methods (toArray, take)
   - Regional support (US, EU, AU)
 - Error handling:
   - `ITGlueError` base error class
@@ -28,31 +28,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `ITGlueServerError` for 5xx responses
   - `ITGlueNetworkError` for network-level errors
   - `ITGlueTimeoutError` for request timeouts
-- Resources:
+- Complete resource implementations:
   - Organizations (list, listAll, get, create, update, delete)
-  - Organization Types (list, listAll, create, update)
-  - Organization Statuses (list, listAll, create, update)
-- Type definitions for:
-  - Organizations and related types
-  - Configurations and related types
-  - Contacts and related types
-  - Documents and related types
-  - Passwords and related types
-  - Flexible Assets and related types
-  - Locations
-  - Users and Groups
-  - Manufacturers, Models, Platforms, Operating Systems
-  - Countries and Regions
-  - Domains, Expirations, Logs
-  - Attachments and Related Items
-  - Exports and Checklists
+  - Organization Types (list, listAll, get, create, update)
+  - Organization Statuses (list, listAll, get, create, update)
+  - Configurations (list, listAll, listByOrg, listAllByOrg, get, create, update, delete)
+  - Configuration Types (list, listAll, get, create, update, delete)
+  - Configuration Statuses (list, listAll, get, create, update, delete)
+  - Configuration Interfaces (listByConfig, create, update, delete)
+  - Contacts (list, listAll, listByOrg, listAllByOrg, get, create, update, delete)
+  - Contact Types (list, listAll, get, create, update)
+  - Documents (list, listAll, listByOrg, listAllByOrg, get, create, update, delete, publish)
+  - Document Sections (listByDoc, create, update, delete)
+  - Document Images (list, create, delete)
+  - Passwords (list, listAll, listByOrg, listAllByOrg, get, create, update, delete) with showPassword support
+  - Password Categories (list, listAll, get, create, update, delete)
+  - Password Folders (listByOrg, create, update, delete)
+  - Flexible Asset Types (list, listAll, get, create, update, delete)
+  - Flexible Asset Fields (listByType, create, update, delete)
+  - Flexible Assets (list, listAll, get, create, update, delete)
+  - Locations (listByOrg, create, update, delete)
+  - Users (list, listAll, get, update, bulkUpdate) - read-only creation
+  - User Metrics (list, listAll)
+  - Groups (list, listAll, get, create, update, delete)
+  - Manufacturers (list, listAll, get, create, update)
+  - Models (listByManufacturer, create, update)
+  - Platforms (list) - read-only
+  - Operating Systems (list) - read-only
+  - Countries (list, listAll, get) - read-only
+  - Regions (listByCountry) - read-only
+  - Domains (listByOrg) - read-only
+  - Expirations (list, listAll, get) - read-only
+  - Logs (list, listAll) - read-only
+  - Attachments (list, create, update, delete) - nested under various resource types
+  - Related Items (create, update, delete)
+  - Exports (list, listAll, get, create, delete)
+  - Checklists (listByOrg, get, update, delete)
+- Full TypeScript type definitions for all resources
 - Test infrastructure:
   - Vitest configuration
   - MSW for API mocking
-  - Unit tests for core utilities
-  - Integration tests for Organizations resource
-
-### Notes
-
-- This is the initial Phase 1 release focusing on core foundation
-- Additional resources will be implemented in subsequent releases
+  - 113 tests covering unit and integration scenarios
+- Dual build output (ESM and CommonJS)
