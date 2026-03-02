@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/wyre-technology/node-it-glue/compare/v1.0.0...v1.0.1) (2026-03-02)
+
+
+### Bug Fixes
+
+* require Node 22+ (semantic-release@25 compatibility) ([cfd8ae0](https://github.com/wyre-technology/node-it-glue/commit/cfd8ae0885cd5f10de2fe4d5f0ca67c5debb36f6))
+* require Node 22+ (semantic-release@25 compatibility) ([28a390b](https://github.com/wyre-technology/node-it-glue/commit/28a390beec0fc7f95c500ff5f3f9b8f909994730))
+
 # 1.0.0 (2026-02-05)
 
 
