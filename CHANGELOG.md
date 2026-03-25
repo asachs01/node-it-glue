@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/wyre-technology/node-it-glue/compare/v1.0.1...v1.1.0) (2026-03-25)
+
+
+### Features
+
+* **types:** add documentFolderId to DocumentFilter ([5dc282d](https://github.com/wyre-technology/node-it-glue/commit/5dc282d1b1ca0cb6035d8d02f82cc3d927676311))
+
 ## [1.0.1](https://github.com/wyre-technology/node-it-glue/compare/v1.0.0...v1.0.1) (2026-03-02)
 
 
