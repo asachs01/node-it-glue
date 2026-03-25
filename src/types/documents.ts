@@ -42,6 +42,8 @@ export interface DocumentFilter {
   createdAt?: string | FilterOperators<string>;
   /** Filter by update date */
   updatedAt?: string | FilterOperators<string>;
+  /** Filter by document folder ID */
+  documentFolderId?: number;
 }
 
 /**
